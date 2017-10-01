@@ -1,0 +1,372 @@
+PASSWORD !!!!!!!!!!!!!!!!!!!!!!!    pashasmirnov123 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+// lab 3
+SELECT LOG(5,40), SIN(125)
+FROM DUAL;
+
+
+// lab 4
+SELECT SUBSTR(last_name, 3 , LENGHT(last_name) ), salary, NEXT_DAY(start_date, 'Sunday' | '¬оскресенье'
+FROM HR.s_emp
+WHERE salary > 1000;
+
+SELECT ID, Street,(ќ заменить на S)
+FROM HR.S_CUSTOMER
+ORDER BY ID;
+
+SELECT CONCAT(first_name, ' ', last_name,' ', ROUND( (SYSDATE-Start_date)/7 ) // ROUND( (SYSDATE-Start_date)/7, 'Day')
+FROM HR.s_emp
+WHERE (DEPT_ID = 11 | DEPT_ID = 43);
+
+
+// lab5
+SELECT TO_CHAR( UPPER( SUBSTR(last_name, 3 , LENGHT(last_name) ) ), '99999'), first_name, salary
+FROM HR.s_emp
+WHERE (DEPT_ID = 41);
+
+SELECT TO_CHAR(ID,'99999') || NAME AS "ќтделы" (как установить длину столбца ? )
+FROM HR.S_DEPT
+
+SELECT UPPER(last_name), TO_CHAR(start_date, 'MM-DD-YYYY') , TO_CHAR(ROUND( (SYSDATE-Start_date)/7),'99999' )
+FROM HR.s_emp
+WHERE (DEPT_ID = 10 | DEPT_ID = 43);
+
+// lab 6
+SELECT MIN(salary), COUNT(*) //  ј”Ќ“ ћЅ Ќ≈ Ќ”∆≈Ќ 
+FROM HR.S_EMP
+WHERE (DEPT_ID = 41);
+
+SELECT ID, REGION_ID, COUNT(*)
+FROM HR.S_DEPT
+GROUP BY ID, REGION_ID;
+
+SELECT ID, COUNT(*)
+FROM HR.S_EMP
+GROUP BY ID
+HAVING ROUND(SYSDATE-Start_date,'YEAR') > 15; // »Ћ» MONTHS_BETWEEN(SYSDATE,start_date) > 180
+
+// lab 4
+SELECT UPPER( s.first_name ), s.dept_id , d.name
+FROM HR.s_emp s, HR.s_dept d
+WHERE s.dept_id = d.id
+AND INITCAP ( s.last_name) = 'dancs';
+
+SELECT c.id "Customer", UPPER(c.name), O.id "ORD_ID"
+FROM HR.s_ord o, HR.s_customer c
+WHERE o.customer_id (+)= c.id;
+
+SELECT e.last_name "Name", d.name "Dept name", ( e.salary % e.commission_pct ) "Ostatok"
+FROM HR.s_emp e, HR.s_dept d
+WHERE e.dept_id = d.id 
+AND e.commission_pct != 0;
+
+// lab5 
+
+1)SELECT e.last_name
+FROM HR.s_emp e 
+WHERE e.ID IN
+(
+SELECT e.ID
+FROM HR.s_emp e, HR.s_customer c
+WHERE (c.SALES_REP_ID = e.ID) AND SUBSTR(c.NAME,1,1) = 
+(
+SELECT SUBSTR(c.NAME,1,1)
+FROM HR.s_customer c
+WHERE (c.CITY = 'Hong Kong')
+)
+);
+
+
+2)
+SELECT c.name, c.address, o.DATE_ORDERED
+FROM HR.S_ORD o, HR.s_Customer c
+WHERE (c.ID = o.customer_id ) AND o.DATE_ORDERED > 
+(
+SELECT o.DATE_ORDERED
+FROM HR.S_ORD o, HR.S_CUSTOMER c
+WHERE (c.ID = o.customer_id ) AND c.NAME like '%iqu%'
+);
+
+3)
+SELECT d.NAME, count(*)
+FROM HR.S_EMP e, HR.S_DEPT d
+WHERE (d.id = e.dept_id) AND  (e.LAST_NAME != 'Havel') AND to_date(to_char(e.START_DATE,'MM'),'MM' ) = 
+(
+SELECT to_date(to_char(e.START_DATE,'MM'),'MM' )
+FROM HR.S_EMP e
+WHERE e.LAST_NAME LIKE 'Havel'
+);
+
+
+lab6
+
+CREATE TABLE Smirnov8и52_gimnazia
+(
+nazvanie_gimnazii VARCHAR(30) NOT NULL,
+raion VARCHAR(30) NOT NULL,
+adress_gimnazii VARCHAR(30) NOT NULL,
+kolichestvo_ychashihsa NUMBER(7) NOT NULL,
+PRIMARY KEY(nazvanie_gimnazii)
+);
+
+CREATE TABLE Smirnov8и52_ychenik
+(
+id_ychenika NUMBER(7) NOT NULL,
+familia VARCHAR(30)  NOT NULL,
+imia VARCHAR(30)  NOT NULL,
+klass NUMBER(7) NOT NULL,
+nazvanie_gimnazii VARCHAR(30) NOT NULL,
+PRIMARY KEY(id_ychenika),
+FOREIGN KEY(nazvanie_gimnazii) REFERENCES Smirnov8и52_gimnazia(nazvanie_gimnazii)
+);
+
+
+CREATE TABLE Smirnov8и52_dop_predmet1
+(
+nazvanie_predmeta VARCHAR(30) NOT NULL,
+nazvanie_gimnazii VARCHAR(30) NOT NULL,
+PRIMARY KEY(nazvanie_predmeta, nazvanie_gimnazii),
+FOREIGN KEY (nazvanie_gimnazii) REFERENCES Smirnov8и52_gimnazia(nazvanie_gimnazii)
+);
+
+// lab7
+INSERT INTO Smirnov8и52_gimnazia(nazvanie_gimnazii,raion,adress_gimnazii,kolichestvo_ychashihsa)
+VALUES('solnishko','oktiaborskii','lenina31/2',2000);
+
+INSERT INTO Smirnov8и52_gimnazia(nazvanie_gimnazii,raion,adress_gimnazii,kolichestvo_ychashihsa)
+VALUES('shkola_nomer_7','leninskii','mira_4',10000);
+
+INSERT INTO Smirnov8и52_gimnazia(nazvanie_gimnazii,raion,adress_gimnazii,kolichestvo_ychashihsa)
+VALUES('shkola_na_snos','iashkino','naberejnaia8',50);
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(3108,'Pavlov','Kostia',7,'shkola_nomer_7');
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(768,'Smyrkin','Konstantin',11,'solnishko');
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(9999,'Kolishkina','Katia',9,'shkola_nomer_7');
+
+INSERT INTO Smirnov8и52_dop_predmet1(nazvanie_predmeta,nazvanie_gimnazii)
+VALUES('fizika','shkola_nomer_7');
+
+INSERT INTO Smirnov8и52_dop_predmet1(nazvanie_predmeta,nazvanie_gimnazii)
+VALUES('ekonomika','solnishko');
+
+UPDATE Smirnov8и52_ychenik
+SET KLASS = 8
+WHERE id_ychenika = 3108;
+
+UPDATE Smirnov8и52_gimnazia
+SET KOLICHESTVO_YCHASHIHSA = 5000, raion = 'kirovskii', adress_gimnazii = 'rabochaia_2'
+WHERE NAZVANIE_GIMNAZII = 'solnishko';
+
+DELETE FROM Smirnov8и52_gimnazia
+WHERE nazvanie_gimnazii='shkola_na_snos';
+
+
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+
+
+////lab8//////
+
+
+SELECT FAMILIA, IMIA
+FROM Smirnov8и52_ychenik
+WHERE ID_YCHENIKA = &ych_id;
+
+SELECT NAZVANIE_GIMNAZII
+FROM Smirnov8и52_gimnazia
+WHERE (KOLICHESTVO_YCHASHIHSA < &kol_ych);
+
+
+/////lab9//////////
+
+///posledov/////
+
+CREATE SEQUENCE ycheniki
+START WITH 12
+MINVALUE 12
+MAXVALUE 16
+INCREMENT BY 2
+NOCYCLE;
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(ycheniki.nextval, 'Kykyshkin', 'jenia', 11, 'solnishko');
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(ycheniki.nextval,'Obyhov','Dima',11,'solnishko');
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(ycheniki.nextval,'Osipov','Pavel',11,'solnishko');
+
+
+///view///////
+
+CREATE VIEW List_Ychenikov_11_klassa
+as SELECT id_ychenika,familia ,imia 
+FROM Smirnov8и52_ychenik
+WHERE KLASS = 11
+ORDER BY id_ychenika;
+
+GRANT SELECT ON List_Ychenikov_11_klassa TO PUBLIC;
+
+SELECT * 
+FROM List_Ychenikov_11_klassa;
+
+
+
+
+
+
+/////triger /////
+
+CREATE TRIGGER dobavit_ychenika
+AFTER INSERT ON Smirnov8и52_ychenik
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Smirnov8и52_ychenik(id_ychenika)
+VALUES (10);
+END;
+
+
+Error report -
+ORA-04089: cannot create triggers on objects owned by SYS
+04089. 00000 -  "cannot create triggers on objects owned by SYS"
+*Cause:    An attempt was made to create a trigger on an object owned by SYS.
+*Action:   Do not create triggers on objects owned by SYS.
+
+
+
+CREATE SEQUENCE ycheniki2
+START WITH 20
+MINVALUE 20
+MAXVALUE 40
+INCREMENT BY 2
+NOCYCLE;
+
+CREATE OR REPLACE TRIGGER our_trigger
+AFTER INSERT ON Smirnov8и52_ychenik
+FOR EACH ROW
+BEGIN
+    SELECT ycheniki2.nextval
+    INTO :new.id_ychenika
+    FROM dual;
+END;
+
+
+INSERT INTO Smirnov8и52_ychenik(id_ychenika,familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES(19,'Osipov','Enakentii',11,'solnishko');
+
+CREATE FUNCTION ShowClass3(id_ych IN INT) 
+   RETURN NUMBER 
+   IS class_number INT;
+   BEGIN 
+      SELECT klass 
+      INTO class_num 
+      FROM Smirnov8и52_ychenik 
+      WHERE id_ychenika = id_ych; 
+      RETURN(class_num); 
+    END;
+
+
+
+CREATE OR REPLACE TRIGGER our_trigger3
+BEFORE INSERT ON Smirnov8и52_ychenik
+FOR EACH ROW
+BEGIN
+    SELECT add_id.nextval
+    INTO :new.id_ychenika
+    FROM dual;
+END;
+
+CREATE OR REPLACE FUNCTION "SHOW"
+RETURN NUMBER
+as cl_num NUMBER;
+BEGIN
+  SELECT id_ychenika INTO cl_num
+  FROM Smirnov8и52_ychenik
+  WHERE klass = 6;
+  RETURN cl_num;
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////
+CREATE SEQUENCE add_id
+START WITH 1
+INCREMENT BY 1;
+
+
+
+INSERT INTO Smirnov8и52_ychenik(familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES('Kykyshkin', 'jenia', 11, 'solnishko');
+
+INSERT INTO Smirnov8и52_ychenik(familia ,imia ,klass ,nazvanie_gimnazii)
+VALUES('Trigerovna', 'Elena', 6, 'solnishko');
+
+CREATE OR REPLACE FUNCTION ShowName (id IN INT)
+RETURN VARCHAR2
+IS
+  summa VARCHAR2;
+  cursor c is
+  SELECT y.name
+  FROM Smirnov8и52_ychenik y
+  WHERE id = y.id;
+BEGIN
+  OPEN c;
+  FETCH c into summa;
+  CLOSE c;
+  RETURN summa;
+END;
+
+create or replace FUNCTION        "POL" 
+RETURN VARCHAR2 AS
+   DIR_POL VARCHAR2(2);
+BEGIN
+   SELECT LPAD(dir_pol,1) INTO DIR_POL
+   FROM s8k21_bylina_direktora
+   WHERE fio_dir='»ванов »ван »ванович';
+   RETURN DIR_POL;
+END;
+
+CREATE OR REPLACE FUNCTION SHOW (id_n IN NUMBER )
+RETURN NUMBER
+IS cl_num NUMBER;
+BEGIN
+  SELECT klass INTO cl_num
+  FROM Smirnov8и52_ychenik
+  WHERE id_n = id_ychenika;
+  RETURN (cl_num);
+END;
+
+create or replace FUNCTION "ShowClass8"(id_ych IN NUMBER) 
+   RETURN NUMBER 
+   IS class_number NUMBER;
+   BEGIN 
+      SELECT klass INTO class_num 
+      FROM Smirnov8и52_ychenik 
+      WHERE id_ych = id_ychenika; 
+      RETURN(class_num); 
+    END;
